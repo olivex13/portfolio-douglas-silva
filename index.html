@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Douglas | Analytics Engineer & Data Specialist</title>
+  <meta name="description" content="Analytics Engineer especializado em pipelines de dados, visualização e IA. Disponível para freelas no 99freelas e Workana." />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Douglas | Analytics Engineer & Data Specialist" />
+  <meta property="og:description" content="Transformo dados brutos em pipelines confiáveis, dashboards acionáveis e sistemas com IA." />
+  <meta property="og:type" content="website" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      Douglas
+    </div>
+    <div class="nav-pills">
+      <button class="npill active" data-target="hero">Início</button>
+      <button class="npill" data-target="projects">Projetos</button>
+      <button class="npill" data-target="stack">Stack</button>
+      <button class="npill" data-target="about">Sobre</button>
+    </div>
+    <button class="cta-btn" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Contratar</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <i class="ti ti-menu-2"></i>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="npill" data-target="hero">Início</button>
+    <button class="npill" data-target="projects">Projetos</button>
+    <button class="npill" data-target="stack">Stack</button>
+    <button class="npill" data-target="about">Sobre</button>
+    <button class="npill" data-target="about">Contratar</button>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-left">
+      <div class="badge">
+        <span class="bdot"></span>
+        <span class="btxt">Disponível para freelas</span>
+      </div>
+      <h1>Analytics<br>Engineer &amp;<br><em>Data Specialist</em></h1>
+      <p class="sub">Transformo dados brutos em pipelines confiáveis, dashboards acionáveis e sistemas com IA — do raw data à decisão de negócio.</p>
+      <div class="hero-btns">
+        <button class="hbtn1" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">Ver projetos</button>
+        <a class="hbtn2" href="assets/cv.pdf" download>
+          <i class="ti ti-download"></i> Baixar CV
+        </a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hcard-top">
+        <div class="hcard-label">PROFICIÊNCIA TÉCNICA</div>
+        <div class="skill-bars">
+          <div class="sb-row">
+            <span class="sb-name">SQL / dbt</span>
+            <div class="sb-track"><div class="sb-fill" data-width="95" style="background:var(--acc);"></div></div>
+            <span class="sb-pct">95%</span>
+          </div>
+          <div class="sb-row">
+            <span class="sb-name">Python</span>
+            <div class="sb-track"><div class="sb-fill" data-width="88" style="background:var(--acc2);"></div></div>
+            <span class="sb-pct">88%</span>
+          </div>
+          <div class="sb-row">
+            <span class="sb-name">Spark</span>
+            <div class="sb-track"><div class="sb-fill" data-width="80" style="background:var(--acc);"></div></div>
+            <span class="sb-pct">80%</span>
+          </div>
+          <div class="sb-row">
+            <span class="sb-name">IA / LLM</span>
+            <div class="sb-track"><div class="sb-fill" data-width="72" style="background:var(--acc2);"></div></div>
+            <span class="sb-pct">72%</span>
+          </div>
+          <div class="sb-row">
+            <span class="sb-name">GCP</span>
+            <div class="sb-track"><div class="sb-fill" data-width="85" style="background:var(--acc3);"></div></div>
+            <span class="sb-pct">85%</span>
+          </div>
+        </div>
+      </div>
+      <div class="hcard-bottom">
+        <div class="hc-stat"><div class="hcs-num">5+</div><div class="hcs-lbl">Anos</div></div>
+        <div class="hc-stat"><div class="hcs-num">12+</div><div class="hcs-lbl">Projetos</div></div>
+        <div class="hc-stat"><div class="hcs-num">TB+</div><div class="hcs-lbl">Dados</div></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- STACK -->
+  <section class="stack-sec" id="stack">
+    <div class="sec-hd">
+      <div class="sec-title">Stack técnico</div>
+      <div class="sec-sub" id="chip-count">12 tecnologias</div>
+    </div>
+    <div class="cat-tabs">
+      <button class="ctab on" onclick="filterChips('all', this)">Todos</button>
+      <button class="ctab" onclick="filterChips('e', this)">Eng. Dados</button>
+      <button class="ctab" onclick="filterChips('v', this)">Visualização</button>
+      <button class="ctab" onclick="filterChips('a', this)">IA</button>
+      <button class="ctab" onclick="filterChips('c', this)">Cloud</button>
+    </div>
+    <div class="chips" id="chips">
+      <span class="chip ch-e" data-cat="e"><i class="ti ti-database"></i>BigQuery</span>
+      <span class="chip ch-e" data-cat="e"><i class="ti ti-transform"></i>dbt</span>
+      <span class="chip ch-e" data-cat="e"><i class="ti ti-flame"></i>Apache Spark</span>
+      <span class="chip ch-e" data-cat="e"><i class="ti ti-wind"></i>Airflow</span>
+      <span class="chip ch-e" data-cat="e"><i class="ti ti-layers-intersect"></i>Iceberg</span>
+      <span class="chip ch-v" data-cat="v"><i class="ti ti-chart-bar"></i>Streamlit</span>
+      <span class="chip ch-v" data-cat="v"><i class="ti ti-chart-line"></i>Looker Studio</span>
+      <span class="chip ch-a" data-cat="a"><i class="ti ti-robot"></i>LangChain</span>
+      <span class="chip ch-a" data-cat="a"><i class="ti ti-sparkles"></i>OpenAI API</span>
+      <span class="chip ch-c" data-cat="c"><i class="ti ti-cloud"></i>GCP</span>
+      <span class="chip ch-e" data-cat="e"><i class="ti ti-brand-python"></i>Python</span>
+      <span class="chip ch-c" data-cat="c"><i class="ti ti-code"></i>Terraform</span>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- PROJECTS -->
+  <section class="proj-sec" id="projects">
+    <div class="sec-hd">
+      <div class="sec-title">Projetos em destaque</div>
+      <div class="sec-sub">3 projetos</div>
+    </div>
+    <div class="proj-grid">
+      <div class="pcard feat">
+        <span class="feat-badge">DESTAQUE</span>
+        <div class="pcard-icon pi-b"><i class="ti ti-database"></i></div>
+        <div class="ptitle">B3 Market Intelligence</div>
+        <div class="pdesc">Pipeline end-to-end para o mercado brasileiro. Ingestão, transformação e visualização de dados da bolsa com Spark, Iceberg e dbt.</div>
+        <div class="ptechs">
+          <span class="ptech">GCP</span>
+          <span class="ptech">Spark</span>
+          <span class="ptech">dbt</span>
+          <span class="ptech">Airflow</span>
+        </div>
+        <a class="plink" href="#" target="_blank"><i class="ti ti-external-link"></i> Ver projeto</a>
+      </div>
+      <div class="pcard">
+        <div class="pcard-icon pi-g"><i class="ti ti-chart-area"></i></div>
+        <div class="ptitle">Dashboard Financeiro</div>
+        <div class="pdesc">Painel interativo em Streamlit com análise de portfólio, séries temporais e alertas automatizados.</div>
+        <div class="ptechs">
+          <span class="ptech">Python</span>
+          <span class="ptech">Streamlit</span>
+          <span class="ptech">BigQuery</span>
+        </div>
+        <a class="plink" href="#" target="_blank"><i class="ti ti-external-link"></i> Ver projeto</a>
+      </div>
+      <div class="pcard">
+        <div class="pcard-icon pi-p"><i class="ti ti-brain"></i></div>
+        <div class="ptitle">RAG Corporativo</div>
+        <div class="pdesc">Chatbot com retrieval-augmented generation para consulta inteligente a documentos e dados estruturados de negócio.</div>
+        <div class="ptechs">
+          <span class="ptech">LangChain</span>
+          <span class="ptech">OpenAI</span>
+          <span class="ptech">BigQuery</span>
+        </div>
+        <a class="plink" href="#" target="_blank"><i class="ti ti-external-link"></i> Ver projeto</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ABOUT & CONTACT -->
+  <section class="about-sec" id="about">
+    <div class="about-txt">
+      <h2>Sobre mim</h2>
+      <p>Analytics Engineer com foco em arquitetura de dados escalável, modelagem dimensional e sistemas com IA generativa. Transformo dados em valor real para negócios.</p>
+      <p>Disponível para projetos remotos, consultorias e freelas no <strong>99freelas</strong> e <strong>Workana</strong>.</p>
+      <div class="contact-list">
+        <a class="citem" href="https://linkedin.com/in/SEU-USUARIO" target="_blank">
+          <div class="citem-ic cic-b"><i class="ti ti-brand-linkedin"></i></div>
+          <div class="citem-info">
+            <div class="citem-label">LINKEDIN</div>
+            <div class="citem-val">/in/douglas</div>
+          </div>
+          <i class="ti ti-arrow-right citem-arr"></i>
+        </a>
+        <a class="citem" href="https://github.com/SEU-USUARIO" target="_blank">
+          <div class="citem-ic cic-g"><i class="ti ti-brand-github"></i></div>
+          <div class="citem-info">
+            <div class="citem-label">GITHUB</div>
+            <div class="citem-val">@douglas</div>
+          </div>
+          <i class="ti ti-arrow-right citem-arr"></i>
+        </a>
+        <a class="citem" href="mailto:SEU-EMAIL@gmail.com">
+          <div class="citem-ic cic-t"><i class="ti ti-mail"></i></div>
+          <div class="citem-info">
+            <div class="citem-label">EMAIL</div>
+            <div class="citem-val">contato@douglas.dev</div>
+          </div>
+          <i class="ti ti-arrow-right citem-arr"></i>
+        </a>
+      </div>
+    </div>
+    <div class="metrics-block">
+      <div class="metrics-label">IMPACTO</div>
+      <div class="mgrid">
+        <div class="mcard"><div class="mnum">5<span class="munit">+</span></div><div class="mlbl">Anos em dados</div></div>
+        <div class="mcard"><div class="mnum">12<span class="munit">+</span></div><div class="mlbl">Projetos entregues</div></div>
+        <div class="mcard"><div class="mnum">3<span class="munit">×</span></div><div class="mlbl">Redução de latência</div></div>
+        <div class="mcard"><div class="mnum">TB<span class="munit">+</span></div><div class="mlbl">Dados processados</div></div>
+      </div>
+      <div class="avail-bar">
+        <div class="av-dot"></div>
+        <span class="av-txt">Disponível agora para freelas</span>
+        <span class="av-sub">SP · remoto</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="fc">© 2026 Douglas</span>
+    <div class="fplat">
+      <span class="fpl">99freelas</span>
+      <span class="fpl">Workana</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
