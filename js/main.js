@@ -61,22 +61,23 @@ const heroCard = document.querySelector('.hero-card');
 if (heroCard) barObserver.observe(heroCard);
 
 // ── STACK FILTER ─────────────────────────────────────────────
-function filterChips(cat, btn) {
-  document.querySelectorAll('.ctab').forEach(t => t.classList.remove('on'));
+function filterProjects(cat, btn) {
+  document.querySelectorAll('.cat-tabs .ctab').forEach(t => t.classList.remove('on'));
   btn.classList.add('on');
 
-  const chips = document.querySelectorAll('#chips .chip');
+  const cards = document.querySelectorAll('#proj-grid .pcard');
   let visible = 0;
 
-  chips.forEach(chip => {
-    const show = cat === 'all' || chip.dataset.cat === cat;
-    chip.style.display = show ? 'flex' : 'none';
+  cards.forEach(card => {
+    const show = cat === 'all' || card.dataset.cat === cat;
+    card.style.display = show ? 'block' : 'none';
     if (show) visible++;
   });
 
-  document.getElementById('chip-count').textContent =
-    visible + ' tecnologia' + (visible !== 1 ? 's' : '');
+  document.getElementById('proj-count').textContent =
+    visible + ' projeto' + (visible !== 1 ? 's' : '');
 }
 
-// expõe globalmente para os botões inline no HTML
-window.filterChips = filterChips;
+window.filterProjects = filterProjects;
+
+
