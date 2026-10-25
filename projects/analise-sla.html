@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Octopus SLA Monitor | Douglas</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236c8fff'/><text y='.9em' font-size='70' x='50%' text-anchor='middle' font-family='sans-serif' font-weight='600' fill='white'>D</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .proj-hero { padding: 64px 44px 48px; max-width: 860px; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); text-decoration: none; margin-bottom: 32px; transition: color .2s; }
+    .back-link:hover { color: var(--text); }
+    .proj-category { font-size: 11px; letter-spacing: .12em; color: var(--acc2); margin-bottom: 14px; }
+    .proj-hero h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 500; line-height: 1.15; margin-bottom: 16px; }
+    .proj-hero .lead { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 680px; }
+    .proj-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+    .meta-tag { display: flex; align-items: center; gap: 7px; padding: 7px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; color: var(--muted); background: var(--bg2); }
+    .meta-tag i { color: var(--acc2); font-size: 14px; }
+    .context-note { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; background: rgba(167,139,250,.06); border: 1px solid rgba(167,139,250,.2); border-radius: 10px; margin-top: 24px; max-width: 680px; }
+    .context-note i { color: var(--acc2); font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .context-note p { font-size: 13px; color: rgba(226,232,248,.6); line-height: 1.7; }
+
+    .screens-section { padding: 0 44px 56px; }
+    .screens-label { font-size: 10px; letter-spacing: .12em; color: var(--dim); margin-bottom: 16px; }
+    .screen-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+    .stab { font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--dim); cursor: pointer; font-family: var(--font); transition: .2s; }
+    .stab.on { background: rgba(167,139,250,.1); border-color: rgba(167,139,250,.3); color: var(--acc2); }
+    .screen-wrap { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--bg2); }
+    .screen-topbar { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+    .tbar-dots { display: flex; gap: 6px; }
+    .tbar-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .tbar-url { flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 6px; padding: 4px 12px; font-size: 11px; color: var(--dim); margin: 0 12px; font-family: monospace; }
+    .screen-placeholder { display: none; padding: 28px; }
+    .screen-placeholder.active { display: block; }
+
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .dash-title { font-size: 15px; font-weight: 500; color: var(--text); }
+    .dash-sub { font-size: 11px; color: var(--dim); margin-top: 3px; }
+    .dash-filter { display: flex; gap: 8px; flex-wrap: wrap; }
+    .df { font-size: 11px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px; color: var(--dim); background: var(--bg3); }
+    .df.active { border-color: rgba(167,139,250,.4); color: var(--acc2); background: rgba(167,139,250,.08); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .kpi { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+    .kpi-label { font-size: 10px; letter-spacing: .08em; color: var(--dim); margin-bottom: 6px; }
+    .kpi-val { font-size: 22px; font-weight: 500; color: var(--text); }
+    .kpi-val small { font-size: 12px; color: var(--dim); }
+    .kpi-badge { font-size: 10px; margin-top: 4px; }
+    .up { color: var(--acc3); } .dn { color: #f87171; } .warn { color: #fbbf24; }
+
+    .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .charts-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .chart-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .chart-box-title { font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-bottom: 14px; }
+
+    .fake-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+    .fb { border-radius: 3px 3px 0 0; flex: 1; }
+    .target-line { border-top: 1px dashed rgba(251,191,36,.5); margin-top: -2px; position: relative; }
+    .target-label { position: absolute; right: 0; top: -16px; font-size: 9px; color: #fbbf24; }
+
+    .donut-wrap { display: flex; align-items: center; gap: 16px; }
+    .donut-legend { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .dl-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); justify-content: space-between; }
+    .dl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dl-left { display: flex; align-items: center; gap: 8px; }
+
+    .fake-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .fake-table th { text-align: left; padding: 6px 8px; color: var(--dim); font-weight: 400; letter-spacing: .06em; border-bottom: 1px solid var(--border); }
+    .fake-table td { padding: 7px 8px; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,.03); }
+    .fake-table td:first-child { color: var(--text); }
+    .badge-status { display: inline-flex; padding: 2px 8px; border-radius: 20px; font-size: 10px; }
+    .bs-ok { background: rgba(52,211,153,.1); color: var(--acc3); }
+    .bs-warn { background: rgba(251,191,36,.1); color: #fbbf24; }
+    .bs-err { background: rgba(248,113,113,.1); color: #f87171; }
+
+    /* OKR Scorecard */
+    .okr-scorecard { background: var(--bg3); border: 1px solid rgba(167,139,250,.2); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+    .okr-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .okr-title { font-size: 13px; font-weight: 500; color: var(--text); }
+    .okr-quarter { font-size: 11px; color: var(--acc2); background: rgba(167,139,250,.1); border: 1px solid rgba(167,139,250,.2); padding: 3px 10px; border-radius: 20px; }
+    .okr-kr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+    .okr-kr { background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+    .okr-kr-label { font-size: 10px; color: var(--dim); letter-spacing: .06em; margin-bottom: 6px; }
+    .okr-kr-val { font-size: 18px; font-weight: 500; }
+    .okr-kr-meta { font-size: 10px; color: var(--dim); margin-top: 3px; }
+    .progress-bar { height: 4px; background: rgba(255,255,255,.06); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px; }
+
+    .placeholder-note { text-align: center; padding: 20px; font-size: 12px; color: var(--dim); border: 1px dashed rgba(255,255,255,.1); border-radius: 8px; margin-top: 12px; }
+    .placeholder-note i { display: block; font-size: 24px; margin-bottom: 8px; color: var(--acc2); opacity: .5; }
+
+    .content-section { padding: 48px 44px; border-top: 1px solid var(--border); max-width: 860px; }
+    .content-section h2 { font-size: 20px; font-weight: 500; margin-bottom: 20px; }
+    .context-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+    .context-block h3 { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 10px; }
+    .context-block p { font-size: 13px; color: var(--muted); line-height: 1.8; }
+    .flow-steps { display: flex; gap: 0; align-items: stretch; flex-wrap: wrap; }
+    .flow-step { flex: 1; min-width: 140px; padding: 16px; background: var(--bg2); border: 1px solid var(--border); position: relative; }
+    .flow-step:not(:last-child)::after { content: '→'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); color: var(--dim); font-size: 16px; z-index: 1; }
+    .flow-step:first-child { border-radius: 10px 0 0 10px; }
+    .flow-step:last-child { border-radius: 0 10px 10px 0; }
+    .fs-icon { font-size: 20px; margin-bottom: 8px; }
+    .fs-title { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .fs-desc { font-size: 11px; color: var(--dim); line-height: 1.6; }
+    .problem-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .problem-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .pc-icon { font-size: 22px; margin-bottom: 12px; }
+    .pc-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+    .pc-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
+    .stack-chips-proj { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    @media (max-width: 768px) {
+      .proj-hero, .screens-section, .content-section { padding-left: 20px; padding-right: 20px; }
+      .charts-row, .charts-row-2 { grid-template-columns: 1fr; }
+      .kpi-row { grid-template-columns: 1fr 1fr; }
+      .flow-steps { flex-direction: column; }
+      .flow-step { border-radius: 0; }
+      .flow-step:first-child { border-radius: 10px 10px 0 0; }
+      .flow-step:last-child { border-radius: 0 0 10px 10px; }
+      .flow-step::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo"><div class="logo-dot"></div>Douglas</div>
+    <div class="nav-pills">
+      <button class="npill" onclick="window.location.href='../index.html#hero'">Início</button>
+      <button class="npill" onclick="window.location.href='../index.html#projects'">Projetos</button>
+      <button class="npill" onclick="window.location.href='../index.html#stack'">Stack</button>
+      <button class="npill" onclick="window.location.href='../index.html#about'">Sobre</button>
+    </div>
+    <button class="cta-btn" onclick="window.location.href='../index.html#about'">Contratar</button>
+  </nav>
+
+  <div class="proj-hero">
+    <a href="../index.html#projects" class="back-link"><i class="ti ti-arrow-left"></i> Voltar aos projetos</a>
+    <div class="proj-category">DATA VIZ · POWER BI · OPERAÇÕES</div>
+    <h1>Octopus SLA Monitor<br><em style="font-style:normal;background:linear-gradient(135deg,var(--acc2),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Monitoramento de Entregas & OKR de Ressuprimento</em></h1>
+    <p class="lead">Painel de acompanhamento do SLA de entrega de um modelo analítico de ressuprimento inteligente para o time de compras — com visão de incidentes e scorecard de OKR trimestral.</p>
+    <div class="proj-meta">
+      <span class="meta-tag"><i class="ti ti-chart-bar"></i> Power BI</span>
+      <span class="meta-tag"><i class="ti ti-function"></i> DAX</span>
+      <span class="meta-tag"><i class="ti ti-target"></i> OKR</span>
+      <span class="meta-tag"><i class="ti ti-package"></i> Supply Chain</span>
+      <span class="meta-tag"><i class="ti ti-building-factory"></i> Uso interno</span>
+    </div>
+    <div class="context-note">
+      <i class="ti ti-lock"></i>
+      <p>Projeto desenvolvido internamente. Dados, nomenclaturas e identidade visual foram alterados para uso no portfólio, preservando a arquitetura e lógica analítica originais.</p>
+    </div>
+  </div>
+
+  <!-- MOCKUP -->
+  <div class="screens-section">
+    <div class="screens-label">PRÉVIA DO DASHBOARD</div>
+    <div class="screen-tabs">
+      <button class="stab on" onclick="showScreen('overview', this)">Overview</button>
+      <button class="stab" onclick="showScreen('okr', this)">OKR</button>
+    </div>
+
+    <div class="screen-wrap">
+      <div class="screen-topbar">
+        <div class="tbar-dots">
+          <div class="tbar-dot" style="background:#ff5f57"></div>
+          <div class="tbar-dot" style="background:#ffbd2e"></div>
+          <div class="tbar-dot" style="background:#28c840"></div>
+        </div>
+        <div class="tbar-url">powerbi.microsoft.com · Octopus SLA Monitor</div>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div class="screen-placeholder active" id="screen-overview">
+        <div class="dash-header">
+          <div>
+            <div class="dash-title">Overview — Disponibilidade Octopus</div>
+            <div class="dash-sub">Monitoramento geral de SLA e incidentes</div>
+          </div>
+          <div class="dash-filter">
+            <span class="df">Período: 2025–2026</span>
+          </div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">DISPONIBILIDADE GERAL</div>
+            <div class="kpi-val">96,2<small>%</small></div>
+            <div class="kpi-badge up">↑ acima da meta 95%</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">DIAS COM ATRASO</div>
+            <div class="kpi-val">11</div>
+            <div class="kpi-badge warn">do período analisado</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">TEMPO MÉDIO ATRASO</div>
+            <div class="kpi-val">47<small>min</small></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">MAIOR ATRASO</div>
+            <div class="kpi-val">3h<small>12min</small></div>
+            <div class="kpi-badge dn">incidente de infra</div>
+          </div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-box">
+            <div class="chart-box-title">DISPONIBILIDADE POR MÊS</div>
+            <div class="fake-bars" style="position:relative;">
+              <div class="fb" style="height:100%;background:var(--acc3);opacity:.8"></div>
+              <div class="fb" style="height:98%;background:var(--acc3);opacity:.8"></div>
+              <div class="fb" style="height:92%;background:#fbbf24;opacity:.8"></div>
+              <div class="fb" style="height:100%;background:var(--acc3);opacity:.8"></div>
+              <div class="fb" style="height:97%;background:var(--acc3);opacity:.8"></div>
+              <div class="fb" style="height:88%;background:#f87171;opacity:.8"></div>
+              <div class="fb" style="height:100%;background:var(--acc3);opacity:.8"></div>
+              <div class="fb" style="height:99%;background:var(--acc3);opacity:.8"></div>
+              <div class="fb" style="height:95%;background:var(--acc3);opacity:.8"></div>
+              <div class="fb" style="height:100%;background:var(--acc3);opacity:.8"></div>
+              <div class="fb" style="height:96%;background:var(--acc3);opacity:.8"></div>
+              <div class="fb" style="height:97%;background:var(--acc3);opacity:.8"></div>
+            </div>
+            <div style="border-top:1px dashed rgba(251,191,36,.4);margin-top:2px;position:relative;">
+              <span style="position:absolute;right:0;top:-14px;font-size:9px;color:#fbbf24;">meta 95%</span>
+            </div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-box-title">INCIDENTES POR CATEGORIA</div>
+            <div class="donut-wrap">
+              <svg class="donut-chart" width="70" height="70" viewBox="0 0 70 70">
+                <circle cx="35" cy="35" r="28" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="10"/>
+                <circle cx="35" cy="35" r="28" fill="none" stroke="var(--acc)" stroke-width="10" stroke-dasharray="70 106" stroke-dashoffset="0" transform="rotate(-90 35 35)"/>
+                <circle cx="35" cy="35" r="28" fill="none" stroke="var(--acc2)" stroke-width="10" stroke-dasharray="42 134" stroke-dashoffset="-70" transform="rotate(-90 35 35)"/>
+                <circle cx="35" cy="35" r="28" fill="none" stroke="#fbbf24" stroke-width="10" stroke-dasharray="30 146" stroke-dashoffset="-112" transform="rotate(-90 35 35)"/>
+                <circle cx="35" cy="35" r="28" fill="none" stroke="#f87171" stroke-width="10" stroke-dasharray="34 142" stroke-dashoffset="-142" transform="rotate(-90 35 35)"/>
+              </svg>
+              <div class="donut-legend">
+                <div class="dl-item"><div class="dl-left"><div class="dl-dot" style="background:var(--acc)"></div>Infra</div><span>40%</span></div>
+                <div class="dl-item"><div class="dl-left"><div class="dl-dot" style="background:var(--acc2)"></div>Dados</div><span>24%</span></div>
+                <div class="dl-item"><div class="dl-left"><div class="dl-dot" style="background:#fbbf24"></div>API</div><span>18%</span></div>
+                <div class="dl-item"><div class="dl-left"><div class="dl-dot" style="background:#f87171"></div>Outros</div><span>18%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-box" style="margin-bottom:12px;">
+          <div class="chart-box-title">DETALHAMENTO DE INCIDENTES</div>
+          <table class="fake-table">
+            <tr><th>Data</th><th>Duração</th><th>Categoria</th><th>Causa raiz</th><th>Status</th></tr>
+            <tr><td>15/Mar/26</td><td>3h 12min</td><td>Infra</td><td>Falha no servidor de processamento</td><td><span class="badge-status bs-ok">Resolvido</span></td></tr>
+            <tr><td>02/Mar/26</td><td>48min</td><td>API</td><td>Timeout na API de origem — tabela vendas</td><td><span class="badge-status bs-ok">Resolvido</span></td></tr>
+            <tr><td>18/Fev/26</td><td>1h 05min</td><td>Dados</td><td>Inconsistência na tabela de estoque</td><td><span class="badge-status bs-ok">Resolvido</span></td></tr>
+            <tr><td>07/Fev/26</td><td>22min</td><td>API</td><td>Rate limit excedido — API fornecedores</td><td><span class="badge-status bs-ok">Resolvido</span></td></tr>
+            <tr><td>30/Jan/26</td><td>2h 18min</td><td>Infra</td><td>Manutenção não programada do ambiente</td><td><span class="badge-status bs-warn">Monitorando</span></td></tr>
+          </table>
+        </div>
+        <div class="placeholder-note"><i class="ti ti-photo"></i>Substitua por print real do dashboard após exportar do Power BI</div>
+      </div>
+
+      <!-- OKR -->
+      <div class="screen-placeholder" id="screen-okr">
+        <div class="dash-header">
+          <div>
+            <div class="dash-title">OKR — Disponibilidade Octopus</div>
+            <div class="dash-sub">Acompanhamento do ciclo trimestral</div>
+          </div>
+          <div class="dash-filter">
+            <span class="df">1Q26</span>
+            <span class="df active">2Q26</span>
+            <span class="df">3Q26</span>
+            <span class="df">4Q26</span>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">CICLO DECORRIDO</div>
+            <div class="kpi-val">68<small>%</small></div>
+            <div class="kpi-badge" style="color:var(--dim)">46 de 68 dias</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">SLA ATUAL DO CICLO</div>
+            <div class="kpi-val">96,1<small>%</small></div>
+            <div class="kpi-badge up">↑ acima da meta</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">PROJEÇÃO FECHAMENTO</div>
+            <div class="kpi-val">95,8<small>%</small></div>
+            <div class="kpi-badge up">dentro da meta</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">ATRASOS PERMITIDOS</div>
+            <div class="kpi-val">3</div>
+            <div class="kpi-badge warn">para fechar ≥ 95%</div>
+          </div>
+        </div>
+
+        <div class="okr-scorecard">
+          <div class="okr-header">
+            <div>
+              <div class="okr-title">KR — 95% das entregas até às 09h</div>
+              <div style="font-size:12px;color:var(--dim);margin-top:3px;">Objetivo: Garantir disponibilidade do Octopus para o time de compras</div>
+            </div>
+            <span class="okr-quarter">2Q26</span>
+          </div>
+          <div class="okr-kr-grid">
+            <div class="okr-kr">
+              <div class="okr-kr-label">META DA KR</div>
+              <div class="okr-kr-val" style="color:var(--acc2)">95,0%</div>
+              <div class="okr-kr-meta">entregas no prazo</div>
+            </div>
+            <div class="okr-kr">
+              <div class="okr-kr-label">RESULTADO ATUAL</div>
+              <div class="okr-kr-val" style="color:var(--acc3)">96,1%</div>
+              <div class="okr-kr-meta">+1,1pp acima</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:96%;background:var(--acc3)"></div></div>
+            </div>
+            <div class="okr-kr">
+              <div class="okr-kr-label">GAP PARA META</div>
+              <div class="okr-kr-val" style="color:var(--acc3)">+1,1pp</div>
+              <div class="okr-kr-meta">folga positiva</div>
+            </div>
+            <div class="okr-kr">
+              <div class="okr-kr-label">PROJEÇÃO FINAL</div>
+              <div class="okr-kr-val" style="color:var(--acc3)">95,8%</div>
+              <div class="okr-kr-meta">sem novos atrasos</div>
+            </div>
+            <div class="okr-kr">
+              <div class="okr-kr-label">SEMANAS ≥ 95%</div>
+              <div class="okr-kr-val" style="color:var(--acc)">7<span style="font-size:14px;color:var(--dim)">/10</span></div>
+              <div class="okr-kr-meta">semanas dentro da meta</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-row-2">
+          <div class="chart-box">
+            <div class="chart-box-title">DISPONIBILIDADE POR MÊS — 2Q26</div>
+            <div class="fake-bars">
+              <div class="fb" style="height:100%;background:var(--acc3);opacity:.85;flex:2"></div>
+              <div class="fb" style="height:91%;background:#fbbf24;opacity:.85;flex:2"></div>
+              <div style="flex:2;display:flex;align-items:flex-end;gap:3px;">
+                <div class="fb" style="height:97%;background:var(--acc3);opacity:.85;flex:1"></div>
+                <div style="flex:1;font-size:9px;color:var(--dim);text-align:center;align-self:center">parcial</div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-around;font-size:10px;color:var(--dim);margin-top:6px;">
+              <span>Abr/26</span><span>Mai/26</span><span>Jun/26</span>
+            </div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-box-title">CAUSAS DE ATRASO — 2Q26</div>
+            <div class="donut-wrap">
+              <svg width="70" height="70" viewBox="0 0 70 70">
+                <circle cx="35" cy="35" r="28" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="10"/>
+                <circle cx="35" cy="35" r="28" fill="none" stroke="var(--acc)" stroke-width="10" stroke-dasharray="88 88" stroke-dashoffset="0" transform="rotate(-90 35 35)"/>
+                <circle cx="35" cy="35" r="28" fill="none" stroke="#fbbf24" stroke-width="10" stroke-dasharray="44 132" stroke-dashoffset="-88" transform="rotate(-90 35 35)"/>
+                <circle cx="35" cy="35" r="28" fill="none" stroke="var(--acc2)" stroke-width="10" stroke-dasharray="44 132" stroke-dashoffset="-132" transform="rotate(-90 35 35)"/>
+              </svg>
+              <div class="donut-legend">
+                <div class="dl-item"><div class="dl-left"><div class="dl-dot" style="background:var(--acc)"></div>Infra</div><span>50%</span></div>
+                <div class="dl-item"><div class="dl-left"><div class="dl-dot" style="background:#fbbf24"></div>API</div><span>25%</span></div>
+                <div class="dl-item"><div class="dl-left"><div class="dl-dot" style="background:var(--acc2)"></div>Dados</div><span>25%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="placeholder-note"><i class="ti ti-photo"></i>Substitua por print real do dashboard após exportar do Power BI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEXTO DO SISTEMA -->
+  <div class="content-section">
+    <h2>Contexto do sistema</h2>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="fs-icon" style="color:var(--acc)"><i class="ti ti-chart-line"></i></div>
+        <div class="fs-title">Descritiva</div>
+        <div class="fs-desc">Análise do histórico de vendas por SKU</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon" style="color:var(--acc2)"><i class="ti ti-crystal-ball"></i></div>
+        <div class="fs-title">Preditiva</div>
+        <div class="fs-desc">Forecast de demanda futura</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon" style="color:var(--acc3)"><i class="ti ti-bulb"></i></div>
+        <div class="fs-title">Prescritiva</div>
+        <div class="fs-desc">Sugestão de compra por SKU com regras de negócio</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon" style="color:#fbbf24"><i class="ti ti-table"></i></div>
+        <div class="fs-title">Entrega</div>
+        <div class="fs-desc">Tabelas para o time de compras até às 09h</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;">
+      <div class="context-block">
+        <h3>Por que o SLA importa</h3>
+        <p>O time de compras depende das sugestões do Octopus para iniciar a rotina diária de negociação com fornecedores. Um atraso no pipeline bloqueia diretamente o trabalho deles — daí o OKR de 95% das entregas até às 09h. Este painel foi criado para dar visibilidade a esse compromisso e apoiar a investigação rápida de incidentes quando ocorrem.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROBLEMA -->
+  <div class="content-section">
+    <h2>Problema resolvido</h2>
+    <div class="problem-cards">
+      <div class="problem-card">
+        <div class="pc-icon" style="color:var(--acc2)"><i class="ti ti-eye"></i></div>
+        <div class="pc-title">Sem visibilidade de SLA</div>
+        <div class="pc-desc">Não havia forma de acompanhar sistematicamente se as entregas estavam dentro do prazo acordado ou identificar padrões de falha.</div>
+      </div>
+      <div class="problem-card">
+        <div class="pc-icon" style="color:var(--acc)"><i class="ti ti-target"></i></div>
+        <div class="pc-title">OKR sem rastreamento</div>
+        <div class="pc-desc">O objetivo de 95% de disponibilidade existia, mas sem um scorecard centralizado era impossível projetar o fechamento do quarter ou saber a folga restante.</div>
+      </div>
+      <div class="problem-card">
+        <div class="pc-icon" style="color:#fbbf24"><i class="ti ti-bug"></i></div>
+        <div class="pc-title">Incidentes sem categorização</div>
+        <div class="pc-desc">Falhas aconteciam sem um registro estruturado por causa raiz, dificultando priorizar melhorias de infraestrutura ou qualidade de dados.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STACK -->
+  <div class="content-section">
+    <h2>Stack utilizada</h2>
+    <div class="stack-chips-proj">
+      <span class="chip ch-v"><i class="ti ti-chart-bar"></i>Power BI</span>
+      <span class="chip ch-e"><i class="ti ti-function"></i>DAX</span>
+      <span class="chip ch-e"><i class="ti ti-table"></i>Power Query</span>
+      <span class="chip ch-e"><i class="ti ti-database"></i>SQL</span>
+      <span class="chip ch-a"><i class="ti ti-refresh"></i>ETL Complexo</span>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span class="fc">© 2026 Douglas Silva</span>
+  </footer>
+
+  <script>
+    function showScreen(id, btn) {
+      document.querySelectorAll('.screen-placeholder').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.stab').forEach(t => t.classList.remove('on'));
+      document.getElementById('screen-' + id).classList.add('active');
+      btn.classList.add('on');
+    }
+  </script>
+</body>
+</html>

@@ -261,7 +261,7 @@ h1 em {
 
 .hc-stat { text-align: center; }
 .hcs-num { font-size: 20px; font-weight: 500; color: var(--text); }
-.hcs-lbl { font-size: 11px; color: var(--dim); margin-top: 2px; }
+.hcs-lbl { font-size: 11px; color: rgba(226,232,248,0.55); margin-top: 2px; }
 
 /* ── STACK ───────────────────────────────── */
 .stack-sec { padding: 40px 44px; }
@@ -533,3 +533,59 @@ h1 em {
   .hbtn1, .hbtn2 { width: 100%; justify-content: center; }
   .mgrid { grid-template-columns: 1fr; }
 }
+
+.status-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+
+.status-item { display: flex; align-items: center; gap: 12px; }
+
+.si-icon {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+
+.si-green  { background: rgba(52,211,153,.1);  color: var(--acc3); }
+.si-blue   { background: rgba(108,143,255,.1); color: var(--acc); }
+.si-purple { background: rgba(167,139,250,.1); color: var(--acc2); }
+
+.si-title { font-size: 13px; color: var(--text); font-weight: 500; }
+.si-sub   { font-size: 11px; color: rgba(226,232,248,0.55); margin-top: 1px; }
+
+/* ── FOTO DE PERFIL ─────────────────────── */
+.photo-block {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.profile-photo {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 15px;
+  border: 1px solid var(--border);
+  object-fit: cover;
+  aspect-ratio: 3 / 4;
+}
+
+/* ── STATUS CARD ────────────────────────── */
+.status-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.status-item { display: flex; align-items: center; gap: 12px; }
+.si-icon {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.si-green  { background: rgba(52,211,153,.1);  color: var(--acc3); }
+.si-blue   { background: rgba(108,143,255,.1); color: var(--acc); }
+.si-purple { background: rgba(167,139,250,.1); color: var(--acc2); }
+.si-title  { font-size: 13px; color: var(--text); font-weight: 500; }
+.si-sub    { font-size: 11px; color: rgba(226,232,248,0.55); margin-top: 1px; }
+
+/* ── RESPONSIVO — FOTO ──────────────────── */
+@media (max-width: 768px) {
+  .profile-photo {
+    max-width: 200px;
+    aspect-ratio: 1 / 1;
+  }
+}
+.hcard-label { font-size: 10px; letter-spacing: .12em; color: rgba(226,232,248,0.55); margin-bottom: 16px; }

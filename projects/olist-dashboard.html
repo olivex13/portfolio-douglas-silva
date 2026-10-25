@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Olist Dashboard Analítico | Douglas</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236c8fff'/><text y='.9em' font-size='70' x='50%' text-anchor='middle' font-family='sans-serif' font-weight='600' fill='white'>D</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .proj-hero { padding: 64px 44px 48px; max-width: 860px; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); text-decoration: none; margin-bottom: 32px; transition: color .2s; }
+    .back-link:hover { color: var(--text); }
+    .proj-category { font-size: 11px; letter-spacing: .12em; color: var(--acc); margin-bottom: 14px; }
+    .proj-hero h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 500; line-height: 1.15; margin-bottom: 16px; }
+    .proj-hero .lead { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 680px; }
+    .proj-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+    .meta-tag { display: flex; align-items: center; gap: 7px; padding: 7px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; color: var(--muted); background: var(--bg2); }
+    .meta-tag i { color: var(--acc); font-size: 14px; }
+
+    /* MOCKUP SCREENS */
+    .screens-section { padding: 0 44px 56px; }
+    .screens-label { font-size: 10px; letter-spacing: .12em; color: var(--dim); margin-bottom: 16px; }
+    .screen-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+    .stab { font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--dim); cursor: pointer; font-family: var(--font); transition: .2s; }
+    .stab.on { background: rgba(108,143,255,.1); border-color: rgba(108,143,255,.3); color: var(--acc); }
+    .screen-wrap { position: relative; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--bg2); }
+    .screen-topbar { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+    .tbar-dots { display: flex; gap: 6px; }
+    .tbar-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .tbar-url { flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 6px; padding: 4px 12px; font-size: 11px; color: var(--dim); margin: 0 12px; font-family: monospace; }
+    .screen-placeholder { display: none; padding: 32px; }
+    .screen-placeholder.active { display: block; }
+
+    /* Fake dashboard layout */
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .dash-title-area { }
+    .dash-title { font-size: 15px; font-weight: 500; color: var(--text); }
+    .dash-sub { font-size: 11px; color: var(--dim); margin-top: 3px; }
+    .dash-filter { display: flex; gap: 8px; }
+    .df { font-size: 11px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px; color: var(--dim); background: var(--bg3); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .kpi { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+    .kpi-label { font-size: 10px; letter-spacing: .08em; color: var(--dim); margin-bottom: 6px; }
+    .kpi-val { font-size: 22px; font-weight: 500; color: var(--text); }
+    .kpi-val small { font-size: 12px; color: var(--dim); }
+    .kpi-badge { font-size: 10px; margin-top: 4px; }
+    .up { color: var(--acc3); } .dn { color: #f87171; }
+
+    .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .charts-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .chart-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .chart-box-title { font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-bottom: 14px; }
+
+    /* Fake bar chart */
+    .fake-bars { display: flex; align-items: flex-end; gap: 5px; height: 80px; }
+    .fb { border-radius: 3px 3px 0 0; flex: 1; opacity: .85; }
+    .fb-acc  { background: var(--acc); }
+    .fb-acc2 { background: var(--acc2); }
+    .fb-acc3 { background: var(--acc3); }
+
+    /* Fake line chart */
+    .fake-line { height: 80px; position: relative; overflow: hidden; }
+    .fake-line svg { width: 100%; height: 100%; }
+
+    /* Fake donut */
+    .fake-donut { display: flex; align-items: center; gap: 16px; }
+    .donut-chart { width: 70px; height: 70px; flex-shrink: 0; }
+    .donut-legend { display: flex; flex-direction: column; gap: 6px; }
+    .dl-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+    .dl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Fake table */
+    .fake-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .fake-table th { text-align: left; padding: 6px 8px; color: var(--dim); font-weight: 400; letter-spacing: .06em; border-bottom: 1px solid var(--border); }
+    .fake-table td { padding: 7px 8px; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,.03); }
+    .fake-table td:first-child { color: var(--text); }
+    .pct-bar { height: 4px; border-radius: 2px; background: var(--acc); display: inline-block; }
+
+    /* Scatter fake */
+    .fake-scatter { height: 80px; position: relative; }
+    .sc-dot { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--acc); opacity: .7; }
+
+    .placeholder-note { text-align: center; padding: 20px; font-size: 12px; color: var(--dim); border: 1px dashed rgba(255,255,255,.1); border-radius: 8px; margin-top: 12px; }
+    .placeholder-note i { display: block; font-size: 24px; margin-bottom: 8px; color: var(--acc); opacity: .5; }
+
+    /* CONTENT SECTIONS */
+    .content-section { padding: 48px 44px; border-top: 1px solid var(--border); max-width: 860px; }
+    .content-section h2 { font-size: 20px; font-weight: 500; margin-bottom: 20px; }
+    .problem-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 0; }
+    .problem-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .pc-icon { font-size: 22px; margin-bottom: 12px; }
+    .pc-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+    .pc-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+    .arch-items { display: flex; flex-direction: column; gap: 12px; }
+    .arch-item { display: flex; gap: 16px; align-items: flex-start; padding: 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
+    .arch-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .arch-text h4 { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .arch-text p { font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+    .stack-chips-proj { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    @media (max-width: 768px) {
+      .proj-hero, .screens-section, .content-section { padding-left: 20px; padding-right: 20px; }
+      .charts-row, .charts-row-3 { grid-template-columns: 1fr; }
+      .kpi-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo"><div class="logo-dot"></div>Douglas</div>
+    <div class="nav-pills">
+      <button class="npill" onclick="window.location.href='../index.html#hero'">Início</button>
+      <button class="npill" onclick="window.location.href='../index.html#projects'">Projetos</button>
+      <button class="npill" onclick="window.location.href='../index.html#stack'">Stack</button>
+      <button class="npill" onclick="window.location.href='../index.html#about'">Sobre</button>
+    </div>
+    <button class="cta-btn" onclick="window.location.href='../index.html#about'">Contratar</button>
+  </nav>
+
+  <!-- HERO DO PROJETO -->
+  <div class="proj-hero">
+    <a href="../index.html#projects" class="back-link"><i class="ti ti-arrow-left"></i> Voltar aos projetos</a>
+    <div class="proj-category">DATA VIZ · POWER BI</div>
+    <h1>Olist Dashboard Analítico<br>Visão 360° da Operação de E-commerce</h1>
+    <p class="lead">Transformação de um ecossistema complexo de marketplace — múltiplos vendedores, operadoras logísticas e meios de pagamento — em um painel de inteligência unificado com três visões estratégicas.</p>
+    <div class="proj-meta">
+      <span class="meta-tag"><i class="ti ti-chart-bar"></i> Power BI</span>
+      <span class="meta-tag"><i class="ti ti-database"></i> Star Schema</span>
+      <span class="meta-tag"><i class="ti ti-code"></i> DAX</span>
+      <span class="meta-tag"><i class="ti ti-sql"></i> SQL</span>
+      <span class="meta-tag"><i class="ti ti-building-store"></i> E-commerce</span>
+    </div>
+  </div>
+
+  <!-- MOCKUP DAS TELAS -->
+  <div class="screens-section">
+    <div class="screens-label">PRÉVIA DO DASHBOARD</div>
+    <div class="screen-tabs">
+      <button class="stab on" onclick="showScreen('exec', this)">Visão Executiva</button>
+      <button class="stab" onclick="showScreen('log', this)">Logística</button>
+      <button class="stab" onclick="showScreen('csat', this)">Clientes & CSAT</button>
+    </div>
+
+    <div class="screen-wrap">
+      <div class="screen-topbar">
+        <div class="tbar-dots">
+          <div class="tbar-dot" style="background:#ff5f57"></div>
+          <div class="tbar-dot" style="background:#ffbd2e"></div>
+          <div class="tbar-dot" style="background:#28c840"></div>
+        </div>
+        <div class="tbar-url">powerbi.microsoft.com · Olist Dashboard Analítico</div>
+      </div>
+
+      <!-- EXECUTIVA -->
+      <div class="screen-placeholder active" id="screen-exec">
+        <div class="dash-header">
+          <div class="dash-title-area">
+            <div class="dash-title">Visão Executiva</div>
+            <div class="dash-sub">Saúde financeira global · Jan 2016 – Aug 2018</div>
+          </div>
+          <div class="dash-filter">
+            <span class="df">Ano: Todos</span>
+            <span class="df">Categoria: Todas</span>
+            <span class="df">Estado: Todos</span>
+          </div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">TOTAL FATURADO</div><div class="kpi-val">R$ 13,6M<small></small></div><div class="kpi-badge up">↑ +22% MoM</div></div>
+          <div class="kpi"><div class="kpi-label">PEDIDOS</div><div class="kpi-val">99,4K</div><div class="kpi-badge up">↑ +18% MoM</div></div>
+          <div class="kpi"><div class="kpi-label">TICKET MÉDIO</div><div class="kpi-val">R$ 137</div><div class="kpi-badge" style="color:var(--dim)">estável</div></div>
+          <div class="kpi"><div class="kpi-label">ITENS/PEDIDO</div><div class="kpi-val">1,1</div></div>
+          <div class="kpi"><div class="kpi-label">TOTAL FRETE</div><div class="kpi-val">R$ 2,3M</div></div>
+          <div class="kpi"><div class="kpi-label">IMPACTO FRETE</div><div class="kpi-val">17<small>%</small></div><div class="kpi-badge dn">↑ alto</div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-box">
+            <div class="chart-box-title">FATURAMENTO MÊS A MÊS (MoM)</div>
+            <div class="fake-bars">
+              <div class="fb fb-acc" style="height:35%"></div>
+              <div class="fb fb-acc" style="height:42%"></div>
+              <div class="fb fb-acc" style="height:38%"></div>
+              <div class="fb fb-acc" style="height:55%"></div>
+              <div class="fb fb-acc" style="height:50%"></div>
+              <div class="fb fb-acc" style="height:63%"></div>
+              <div class="fb fb-acc" style="height:58%"></div>
+              <div class="fb fb-acc" style="height:72%"></div>
+              <div class="fb fb-acc" style="height:68%"></div>
+              <div class="fb fb-acc" style="height:80%"></div>
+              <div class="fb fb-acc" style="height:95%"></div>
+              <div class="fb fb-acc2" style="height:100%"></div>
+            </div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-box-title">FATURAMENTO POR CATEGORIA</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px;"><span>cama_mesa_banho</span><span>R$ 1,7M</span></div><div style="height:4px;background:rgba(255,255,255,.06);border-radius:2px;"><div style="width:78%;height:100%;background:var(--acc);border-radius:2px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px;"><span>beleza_saude</span><span>R$ 1,3M</span></div><div style="height:4px;background:rgba(255,255,255,.06);border-radius:2px;"><div style="width:61%;height:100%;background:var(--acc);border-radius:2px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px;"><span>esporte_lazer</span><span>R$ 1,1M</span></div><div style="height:4px;background:rgba(255,255,255,.06);border-radius:2px;"><div style="width:50%;height:100%;background:var(--acc2);border-radius:2px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px;"><span>informatica</span><span>R$ 0,9M</span></div><div style="height:4px;background:rgba(255,255,255,.06);border-radius:2px;"><div style="width:42%;height:100%;background:var(--acc2);border-radius:2px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px;"><span>moveis_decoracao</span><span>R$ 0,8M</span></div><div style="height:4px;background:rgba(255,255,255,.06);border-radius:2px;"><div style="width:35%;height:100%;background:var(--acc3);border-radius:2px;"></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="placeholder-note"><i class="ti ti-photo"></i>Substitua por print real do dashboard após exportar do Power BI</div>
+      </div>
+
+      <!-- LOGÍSTICA -->
+      <div class="screen-placeholder" id="screen-log">
+        <div class="dash-header">
+          <div class="dash-title-area">
+            <div class="dash-title">Visão Logística</div>
+            <div class="dash-sub">Eficiência da cadeia · Prometido vs. Realizado</div>
+          </div>
+          <div class="dash-filter"><span class="df">Período: 2017</span></div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">TEMPO MÉDIO ENTREGA</div><div class="kpi-val">12<small>dias</small></div><div class="kpi-badge dn">↑ acima da meta</div></div>
+          <div class="kpi"><div class="kpi-label">PEDIDOS EM ATRASO</div><div class="kpi-val">6,5K</div><div class="kpi-badge dn">6,5% do total</div></div>
+          <div class="kpi"><div class="kpi-label">FRETE MÉDIO</div><div class="kpi-val">R$ 23</div></div>
+          <div class="kpi"><div class="kpi-label">PRAZO PROMETIDO</div><div class="kpi-val">24<small>dias</small></div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-box">
+            <div class="chart-box-title">PROMETIDO VS. REALIZADO POR ESTADO</div>
+            <table class="fake-table">
+              <tr><th>Estado</th><th>Entrega Real</th><th>Prazo Prom.</th><th>% Atraso</th></tr>
+              <tr><td>RR</td><td>28 dias</td><td>30 dias</td><td><span style="color:#f87171">18%</span></td></tr>
+              <tr><td>AP</td><td>25 dias</td><td>28 dias</td><td><span style="color:#f87171">14%</span></td></tr>
+              <tr><td>AM</td><td>22 dias</td><td>26 dias</td><td><span style="color:#fbbf24">9%</span></td></tr>
+              <tr><td>SP</td><td>8 dias</td><td>10 dias</td><td><span style="color:var(--acc3)">2%</span></td></tr>
+              <tr><td>MG</td><td>10 dias</td><td>12 dias</td><td><span style="color:var(--acc3)">3%</span></td></tr>
+            </table>
+          </div>
+          <div class="chart-box">
+            <div class="chart-box-title">TEMPO X AVALIAÇÃO (DISPERSÃO)</div>
+            <div class="fake-scatter" style="height:100px;">
+              <div class="sc-dot" style="left:10%;top:15%;background:var(--acc3)"></div>
+              <div class="sc-dot" style="left:20%;top:25%;background:var(--acc3)"></div>
+              <div class="sc-dot" style="left:30%;top:35%;background:var(--acc)"></div>
+              <div class="sc-dot" style="left:45%;top:50%;background:var(--acc)"></div>
+              <div class="sc-dot" style="left:55%;top:55%;background:var(--acc2)"></div>
+              <div class="sc-dot" style="left:65%;top:70%;background:var(--acc2)"></div>
+              <div class="sc-dot" style="left:75%;top:80%;background:#f87171"></div>
+              <div class="sc-dot" style="left:85%;top:85%;background:#f87171"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;font-size:9px;color:var(--dim);display:flex;justify-content:space-between;"><span>entrega rápida</span><span>entrega lenta →</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="placeholder-note"><i class="ti ti-photo"></i>Substitua por print real do dashboard após exportar do Power BI</div>
+      </div>
+
+      <!-- CSAT -->
+      <div class="screen-placeholder" id="screen-csat">
+        <div class="dash-header">
+          <div class="dash-title-area">
+            <div class="dash-title">Clientes & Satisfação (CSAT)</div>
+            <div class="dash-sub">Qualidade da experiência · Risco de receita</div>
+          </div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">MÉDIA AVALIAÇÕES</div><div class="kpi-val">4,1<small>/5</small></div></div>
+          <div class="kpi"><div class="kpi-label">% SATISFAÇÃO</div><div class="kpi-val">77<small>%</small></div><div class="kpi-badge up">promotores</div></div>
+          <div class="kpi"><div class="kpi-label">AVALIAÇÕES</div><div class="kpi-val">98K</div></div>
+          <div class="kpi"><div class="kpi-label">FAT. EM RISCO</div><div class="kpi-val">R$ 1,2M</div><div class="kpi-badge dn">notas 1–2</div></div>
+        </div>
+        <div class="charts-row-3">
+          <div class="chart-box">
+            <div class="chart-box-title">DISTRIBUIÇÃO DE NOTAS</div>
+            <div class="fake-bars" style="height:70px;">
+              <div class="fb" style="height:90%;background:var(--acc3)"></div>
+              <div class="fb" style="height:20%;background:var(--acc3);opacity:.6"></div>
+              <div class="fb" style="height:15%;background:var(--acc);opacity:.6"></div>
+              <div class="fb" style="height:18%;background:var(--acc2);opacity:.6"></div>
+              <div class="fb" style="height:35%;background:#f87171"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dim);margin-top:4px;"><span>★5</span><span>★4</span><span>★3</span><span>★2</span><span>★1</span></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-box-title">TOP PROMOTORAS</div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--muted)">flores</span><span style="color:var(--acc3)">4.6 ★</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--muted)">livros</span><span style="color:var(--acc3)">4.5 ★</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--muted)">alimentos</span><span style="color:var(--acc3)">4.4 ★</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--muted)">instrumentos</span><span style="color:var(--acc3)">4.3 ★</span></div>
+            </div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-box-title">TOP DETRATORAS</div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--muted)">fraldas</span><span style="color:#f87171">2.5 ★</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--muted)">seguros</span><span style="color:#f87171">2.7 ★</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--muted)">pc_gamer</span><span style="color:#f87171">2.9 ★</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--muted)">fashion_roupa</span><span style="color:#f87171">3.1 ★</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="placeholder-note"><i class="ti ti-photo"></i>Substitua por print real do dashboard após exportar do Power BI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROBLEMA -->
+  <div class="content-section">
+    <h2>Problema resolvido</h2>
+    <div class="problem-cards">
+      <div class="problem-card">
+        <div class="pc-icon" style="color:var(--acc)"><i class="ti ti-eye"></i></div>
+        <div class="pc-title">Falta de visibilidade consolidada</div>
+        <div class="pc-desc">Indicadores de receita, volume e lucratividade dispersos em múltiplas fontes — sem visão unificada para acompanhar crescimento mês a mês por região e categoria.</div>
+      </div>
+      <div class="problem-card">
+        <div class="pc-icon" style="color:var(--acc2)"><i class="ti ti-truck"></i></div>
+        <div class="pc-title">Gargalos logísticos invisíveis</div>
+        <div class="pc-desc">Impossível identificar quais estados de origem e destino concentravam maior índice de atraso sem um mapeamento do ciclo de vida completo do pedido.</div>
+      </div>
+      <div class="problem-card">
+        <div class="pc-icon" style="color:var(--acc3)"><i class="ti ti-star"></i></div>
+        <div class="pc-title">Satisfação desconectada do SLA</div>
+        <div class="pc-desc">Sem cruzamento entre prazo de entrega e nota de avaliação, era impossível quantificar o faturamento em risco gerado por insatisfações operacionais.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARQUITETURA -->
+  <div class="content-section">
+    <h2>Arquitetura técnica</h2>
+    <div class="arch-items">
+      <div class="arch-item">
+        <div class="arch-icon pi-b"><i class="ti ti-circles-relation"></i></div>
+        <div class="arch-text">
+          <h4>Modelagem em Star Schema</h4>
+          <p>Estrutura com tabelas Fato (Vendas, Logística, Avaliações) e Dimensões (Clientes, Produtos, Vendedores, Calendário). Otimiza performance de leitura e evita problemas de cardinalidade.</p>
+        </div>
+      </div>
+      <div class="arch-item">
+        <div class="arch-icon pi-g"><i class="ti ti-sql"></i></div>
+        <div class="arch-text">
+          <h4>Camada SQL — Extração e limpeza</h4>
+          <p>Queries enxutas para extração e limpeza dos dados diretamente na fonte, garantindo carga leve e performática sem duplicação de cardinalidade no modelo Power BI.</p>
+        </div>
+      </div>
+      <div class="arch-item">
+        <div class="arch-icon pi-p"><i class="ti ti-function"></i></div>
+        <div class="arch-text">
+          <h4>Camada DAX — Inteligência de negócio</h4>
+          <p>Toda a lógica de KPIs, inteligência de tempo (MoM), percentuais de atraso, correlações CSAT e faturamento em risco foram implementados via medidas DAX customizadas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STACK -->
+  <div class="content-section">
+    <h2>Stack utilizada</h2>
+    <div class="stack-chips-proj">
+      <span class="chip ch-v"><i class="ti ti-chart-bar"></i>Power BI</span>
+      <span class="chip ch-e"><i class="ti ti-sql"></i>SQL</span>
+      <span class="chip ch-e"><i class="ti ti-circles-relation"></i>Star Schema</span>
+      <span class="chip ch-e"><i class="ti ti-function"></i>DAX</span>
+      <span class="chip ch-e"><i class="ti ti-table"></i>Power Query</span>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span class="fc">© 2026 Douglas Silva</span>
+    <div class="fplat"><span class="fpl">99freelas</span><span class="fpl">Workana</span></div>
+  </footer>
+
+  <script>
+    function showScreen(id, btn) {
+      document.querySelectorAll('.screen-placeholder').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.stab').forEach(t => t.classList.remove('on'));
+      document.getElementById('screen-' + id).classList.add('active');
+      btn.classList.add('on');
+    }
+  </script>
+</body>
+</html>
